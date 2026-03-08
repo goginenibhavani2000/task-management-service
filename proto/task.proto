@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package task;
+
+// This tells the compiler where to put the generated Go files
+option go_package = "github.com/goginenibhavani2000/task-management-service/pb";
+
+import "google/api/annotations.proto"; // Required for gRPC-Gateway (REST)
+
+// 1. DATA MODELS (The "Nouns")
+message Task {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  bool completed = 4;
+}
+
+message CreateTaskRequest {
+  string title = 1;
+  string description = 2;
+}
+
+message TaskResponse {
+  string id = 1;
+  string title = 2;
+}
+
+// 2. SERVICE DEFINITION (The "Verbs")
+service TaskService {
+  // This RPC creates a task. 
+  // The 'option' block maps it to a REST endpoint: POST /v1/tasks
+  rpc CreateTask(CreateTaskRequest) returns (TaskResponse) {
+    option (google.api.http) = {
+      post: "/v1/tasks"
+      body: "*"
+    };
+  }
+}
